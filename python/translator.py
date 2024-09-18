@@ -121,12 +121,15 @@ def braille_to_string(str_val:str):
             key = get_key(braille_int,vals[i])
             print(key) 
             converted += (key)
+            continue
         elif vals[i] == decimal_follows:
             converted += (".")
+            continue
         if vals[i] in braille_char.values() and currentNum == False:
             key = get_key(braille_char, vals[i])
             print(key) 
-            converted += (key.lower())
+            converted += (key)[0].lower()
+            continue
         elif vals[i] in braille_int.values() and currentNum == True:
             key = get_key(braille_int, vals[i])
             print(key) 
@@ -136,33 +139,25 @@ def braille_to_string(str_val:str):
             print(key)
             converted += (key)
             
-    outputVal = outputVal.join(converted)
+            
+    outputVal = "".join(converted)
+    print(converted)
     print(outputVal)
             
             
             
-            
-            
-            
-            
-        
-    
 args = sys.argv[1:]
 if len(args) == 0:
     print(special[" "])
     exit()
 
 str_val = " ".join(args)
-# print(str_val)
 valCount = Counter(str_val)
-# print(valCount)
-# any(char.capitalize() in braille_char.keys() or char in braille_int.keys() for char in str_val)
 if all(c in {"O", "."} for c in str_val):
     check_letters_int = False
 else:
     check_letters_int = True
         
-# print(check_letters_int)
 
 if check_letters_int:
     string_to_braille(str_val)

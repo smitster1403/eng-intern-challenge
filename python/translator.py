@@ -1,5 +1,6 @@
 import sys
 import re
+from collections import Counter
 
 capital_follows = ".....O"
 decimal_follows = ".O...O"
@@ -97,12 +98,55 @@ def string_to_braille(str_val:str):
 
 # FUNCTION TO GET BRAILLE FROM STRING
 # done
+def get_key(d, target):
+    return [k for k,v in d.items() if v == target]
+
 def braille_to_string(str_val:str):
     print(f"Braile to string: {str_val}")
     vals = [str_val[i:i+6] for i in range(0,len(str_val), 6)]
-    print(f"The braille content: {vals}")
+    print(f"The braille content: {vals}") 
+    converted = []
+    currentNum = False
+    outputVal = " "
+    for i in range(len(vals)-1):
+        if vals[0] == capital_follows:
+            currentNum = False
+            i += 1
+            key = get_key(braille_char, vals[i])
+            print(key) 
+            converted += (key)
+            continue
+        elif vals[i] == num_follows:
+            currentNum = True
+            key = get_key(braille_int,vals[i])
+            print(key) 
+            converted += (key)
+        elif vals[i] == decimal_follows:
+            converted += (".")
+        if vals[i] in braille_char.values() and currentNum == False:
+            key = get_key(braille_char, vals[i])
+            print(key) 
+            converted += (key.lower())
+        elif vals[i] in braille_int.values() and currentNum == True:
+            key = get_key(braille_int, vals[i])
+            print(key) 
+            converted += (key)
+        if vals[i] in special.values():
+            key = get_key(special, vals[i])
+            print(key)
+            converted += (key)
+            
+    outputVal = outputVal.join(converted)
+    print(outputVal)
+            
+            
+            
+            
+            
+            
+            
+        
     
-
 args = sys.argv[1:]
 if len(args) == 0:
     print(special[" "])
@@ -110,11 +154,13 @@ if len(args) == 0:
 
 str_val = " ".join(args)
 # print(str_val)
-
-try:
-    check_letters_int = any(char.capitalize() in braille_char.keys() or char in braille_int.keys() for char in str_val) 
-except:
+valCount = Counter(str_val)
+# print(valCount)
+# any(char.capitalize() in braille_char.keys() or char in braille_int.keys() for char in str_val)
+if all(c in {"O", "."} for c in str_val):
     check_letters_int = False
+else:
+    check_letters_int = True
         
 # print(check_letters_int)
 

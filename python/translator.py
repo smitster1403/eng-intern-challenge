@@ -64,11 +64,11 @@ braille_char = {
 retVal = []
 
 # FUNCTION TO GET STRING FROM BRAILLE
+# done
 def string_to_braille(str_val:str):
     addNum = False
-    addCapital = False
     converted = []
-    # print(f"String to braile: {str_val}")
+    # check each character whith predefined dictionaries
     for i in range(len(str_val)):
         if not str_val[i] in braille_char.keys():
             try:
@@ -84,42 +84,39 @@ def string_to_braille(str_val:str):
             converted.append(braille_int[str_val[i]])
             addNum = True
         elif str_val[i] in braille_int.keys() and addNum == True:
-            # converted.append(num_follows)
             converted.append(braille_int[str_val[i]])
         if str_val[i] in special.keys():
             if str_val[i] == ".":
                 converted.append(decimal_follows)
                 converted.append(special["."])
             else: converted.append(special[str_val[i]])
-        # print(converted)
+    # join conversions to create braille equivalent of string
     retVal = "".join(converted)
     print(retVal)
             
 
 # FUNCTION TO GET BRAILLE FROM STRING
-# done
 def get_key(d, target):
     return [k for k,v in d.items() if v == target]
-
+# stuck on how to make this function better
 def braille_to_string(str_val:str):
-    print(f"Braile to string: {str_val}")
+    # print(f"Braile to string: {str_val}")
     vals = [str_val[i:i+6] for i in range(0,len(str_val), 6)]
-    print(f"The braille content: {vals}") 
+    # print(f"The braille content: {vals}") 
     converted = []
     currentNum = False
     outputVal = " "
+    # check each character with pre defined dictionaries
     for i in range(len(vals)-1):
         if vals[0] == capital_follows:
             currentNum = False
             i += 1
             key = get_key(braille_char, vals[i])
-            print(key) 
             converted += (key)
             continue
         elif vals[i] == num_follows:
             currentNum = True
             key = get_key(braille_int,vals[i])
-            print(key) 
             converted += (key)
             continue
         elif vals[i] == decimal_follows:
@@ -127,25 +124,21 @@ def braille_to_string(str_val:str):
             continue
         if vals[i] in braille_char.values() and currentNum == False:
             key = get_key(braille_char, vals[i])
-            print(key) 
             converted += (key)[0].lower()
             continue
         elif vals[i] in braille_int.values() and currentNum == True:
             key = get_key(braille_int, vals[i])
-            print(key) 
             converted += (key)
         if vals[i] in special.values():
             key = get_key(special, vals[i])
-            print(key)
             converted += (key)
             
-            
+    # join conversions to create string equivalent of braille 
     outputVal = "".join(converted)
-    print(converted)
     print(outputVal)
             
             
-            
+# get string from args
 args = sys.argv[1:]
 if len(args) == 0:
     print(special[" "])
@@ -153,12 +146,13 @@ if len(args) == 0:
 
 str_val = " ".join(args)
 valCount = Counter(str_val)
+# check string content using collections counter
 if all(c in {"O", "."} for c in str_val):
     check_letters_int = False
 else:
     check_letters_int = True
         
-
+# run conversion function depending on string content
 if check_letters_int:
     string_to_braille(str_val)
 else:
